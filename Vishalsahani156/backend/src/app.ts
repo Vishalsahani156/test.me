@@ -53,7 +53,30 @@ export function createApp() {
     res.json(swaggerSpec)
   })
 
+  app.get('/', (_req, res) => {
+    res.json({
+      name: 'Career Toolkit API',
+      docs: '/api/docs',
+      health: '/api/health',
+    })
+  })
+
+  app.get('/api', (_req, res) => {
+    res.json({
+      health: '/api/health',
+      auth: '/api/auth',
+      jobs: '/api/jobs',
+      dashboard: '/api/dashboard',
+      resumes: '/api/resumes',
+      blog: '/api/blog',
+      content: '/api/content',
+      admin: '/api/admin',
+      docs: '/api/docs',
+    })
+  })
+
   app.use('/api/v1', healthRoutes)
+  app.use('/api', healthRoutes)
   app.use('/api/auth', authLimiter, authRoutes)
   app.use('/api/jobs', jobsRoutes)
   app.use('/api/dashboard', dashboardRoutes)

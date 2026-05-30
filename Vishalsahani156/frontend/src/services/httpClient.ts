@@ -1,3 +1,5 @@
+import { formatApiError } from '../utils/apiError'
+
 const API_BASE = import.meta.env.VITE_API_URL ?? '/api'
 const TOKEN_KEY = 'auth_token'
 
@@ -33,10 +35,7 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}): Pr
   const data = await response.json().catch(() => ({}))
 
   if (!response.ok) {
-    throw new ApiError(
-      typeof data.message === 'string' ? data.message : 'Something went wrong',
-      response.status,
-    )
+    throw new ApiError(formatApiError(data), response.status)
   }
 
   return data as T

@@ -47,7 +47,7 @@ export function LoginPage() {
         </div>
       ) : null}
 
-      <form className="auth-form" onSubmit={handleSubmit}>
+      <form className="auth-form" noValidate onSubmit={handleSubmit}>
         <div className="form-field">
           <label htmlFor="email">Email</label>
           <input
@@ -56,7 +56,7 @@ export function LoginPage() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="any email works in demo mode"
+            placeholder="you@example.com"
           />
         </div>
 

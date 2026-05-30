@@ -5,8 +5,18 @@ import type {
   ResetPasswordPayload,
   SignupCredentials,
 } from '../types/auth'
+import { formatApiError } from '../utils/apiError'
 
-const API_BASE = import.meta.env.VITE_API_URL ?? '/api'
+function resolveApiBase(): string {
+  const raw = import.meta.env.VITE_API_URL ?? '/api'
+  const base = raw.replace(/\/$/, '')
+  if (/^https?:\/\/[^/]+$/.test(base)) {
+    return `${base}/api`
+  }
+  return base || '/api'
+}
+
+const API_BASE = resolveApiBase()
 
 export class AuthApiError extends Error {
   status?: number
@@ -30,10 +40,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const data = await response.json().catch(() => ({}))
 
   if (!response.ok) {
-    throw new AuthApiError(
-      typeof data.message === 'string' ? data.message : 'Something went wrong',
-      response.status,
-    )
+    throw new AuthApiError(formatApiError(data), response.status)
   }
 
   return data as T

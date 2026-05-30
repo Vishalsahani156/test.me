@@ -34,14 +34,13 @@ export function SignupPage() {
     <AuthLayout title="Create account" subtitle="Get started with your invoice dashboard.">
       <FormError message={error} />
 
-      <form className="auth-form" onSubmit={handleSubmit}>
+      <form className="auth-form" noValidate onSubmit={handleSubmit}>
         <div className="form-field">
           <label htmlFor="name">Full name</label>
           <input
             id="name"
             type="text"
             autoComplete="name"
-            required
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -53,7 +52,6 @@ export function SignupPage() {
             id="email"
             type="email"
             autoComplete="email"
-            required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -63,8 +61,6 @@ export function SignupPage() {
           id="password"
           label="Password"
           autoComplete="new-password"
-          required
-          minLength={8}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
