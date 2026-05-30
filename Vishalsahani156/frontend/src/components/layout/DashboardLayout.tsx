@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { to: '/resume-manager', label: 'Resume Manager' },
   { to: '/job-alerts', label: 'Job Alerts' },
   { to: '/blog', label: 'Blog' },
+  { to: '/about', label: 'About' },
 ]
 
 export function DashboardLayout() {

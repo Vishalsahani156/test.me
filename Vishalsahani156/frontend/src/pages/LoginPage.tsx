@@ -87,6 +87,10 @@ export function LoginPage() {
       ) : (
         <p className="auth-footer">Signup is temporarily disabled for feature testing.</p>
       )}
+
+      <p className="auth-footer">
+        <Link to="/about">About Career Toolkit</Link>
+      </p>
     </AuthLayout>
   )
 }

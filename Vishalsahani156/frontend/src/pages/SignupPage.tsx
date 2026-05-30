@@ -22,7 +22,7 @@ export function SignupPage() {
 
     try {
       await signup({ name, email, password })
-      navigate('/')
+      navigate('/dashboard')
     } catch (err) {
       setError(err instanceof AuthApiError ? err.message : 'Unable to create account')
     } finally {
@@ -76,6 +76,10 @@ export function SignupPage() {
 
       <p className="auth-footer">
         Already have an account? <Link to="/login">Sign in</Link>
+      </p>
+
+      <p className="auth-footer">
+        <Link to="/about">About Career Toolkit</Link>
       </p>
     </AuthLayout>
   )
