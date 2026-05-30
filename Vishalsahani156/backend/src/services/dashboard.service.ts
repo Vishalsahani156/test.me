@@ -1,5 +1,8 @@
+import type { Prisma } from '@prisma/client'
 import { prisma } from '../lib/prisma.js'
 import { jobsService } from './jobs.service.js'
+
+type ResumeWithVersions = Prisma.ResumeGetPayload<{ include: { versions: true } }>
 
 export interface DashboardAtsOverviewDto {
   currentScore: number | null
@@ -48,9 +51,7 @@ export interface DashboardDataDto {
   analytics: DashboardAnalyticsDto
 }
 
-function buildAtsOverview(
-  resumes: Awaited<ReturnType<typeof prisma.resume.findMany>>,
-): DashboardAtsOverviewDto {
+function buildAtsOverview(resumes: ResumeWithVersions[]): DashboardAtsOverviewDto {
   if (!resumes.length) {
     return {
       currentScore: null,
@@ -112,9 +113,7 @@ function buildAtsOverview(
   }
 }
 
-function buildRecentVersions(
-  resumes: Awaited<ReturnType<typeof prisma.resume.findMany>>,
-): DashboardResumeItemDto[] {
+function buildRecentVersions(resumes: ResumeWithVersions[]): DashboardResumeItemDto[] {
   const items: DashboardResumeItemDto[] = []
 
   for (const resume of resumes) {
@@ -138,7 +137,7 @@ function buildRecentVersions(
 }
 
 function buildAnalytics(
-  resumes: Awaited<ReturnType<typeof prisma.resume.findMany>>,
+  resumes: ResumeWithVersions[],
   savedJobsCount: number,
   recommendedJobs: Awaited<ReturnType<typeof jobsService.getRecommendations>>,
 ): DashboardAnalyticsDto {
