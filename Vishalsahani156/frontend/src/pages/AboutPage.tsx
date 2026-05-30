@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { mockAboutData } from '../../data/mockAboutData'
+import { mockAboutData } from '../data/mockAboutData'
 import { AboutAnchorNav } from '../components/about/AboutAnchorNav'
 import { ContactSection } from '../components/about/ContactSection'
 
@@ -103,6 +103,7 @@ export function AboutPage() {
         <div className="about-footer-links">
           <Link to="/login">Sign in</Link>
           <Link to="/about">About</Link>
+          <Link to="/contact">Contact</Link>
         </div>
       </footer>
     </div>

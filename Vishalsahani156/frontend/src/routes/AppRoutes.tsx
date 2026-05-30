@@ -4,6 +4,7 @@ import { SIGNUP_ENABLED } from '../config/features'
 import { DashboardLayout } from '../components/layout/DashboardLayout'
 import { useAuth } from '../context/AuthContext'
 import { AboutPage } from '../pages/AboutPage'
+import { ContactPage } from '../pages/ContactPage'
 import { BlogCategoryPage } from '../pages/BlogCategoryPage'
 import { BlogDetailPage } from '../pages/BlogDetailPage'
 import { BlogListPage } from '../pages/BlogListPage'
@@ -96,6 +97,7 @@ export function AppRoutes() {
         }
       />
       <Route path="/about" element={<AboutPage />} />
+      <Route path="/contact" element={<ContactPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
