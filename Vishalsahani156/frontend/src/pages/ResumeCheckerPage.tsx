@@ -1,25 +1,42 @@
-import { useState, type FormEvent } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { useEffect, useState, type FormEvent } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { DashboardNav } from '../components/layout/DashboardNav'
 import { AtsScoreCard } from '../components/resume/AtsScoreCard'
 import { KeywordAnalysis } from '../components/resume/KeywordAnalysis'
 import { MissingSkills } from '../components/resume/MissingSkills'
 import { ResumeDownload } from '../components/resume/ResumeDownload'
 import { ResumeSuggestions } from '../components/resume/ResumeSuggestions'
 import { ResumeUpload } from '../components/resume/ResumeUpload'
+import { resumeManagerApi } from '../services/resumeManagerApi'
 import { analyzeResumeFile, getImprovedResumeContent } from '../services/resumeService'
 import type { AtsAnalysisResult } from '../types/resume'
 
 export function ResumeCheckerPage() {
-  const { user, logout } = useAuth()
+  const [searchParams] = useSearchParams()
+  const linkedResumeId = searchParams.get('resumeId')
+  const linkedVersionId = searchParams.get('versionId')
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [jobDescription, setJobDescription] = useState('')
   const [result, setResult] = useState<AtsAnalysisResult | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
+  const [syncMessage, setSyncMessage] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!linkedResumeId || !linkedVersionId) return
+
+    resumeManagerApi.getVersion(linkedResumeId, linkedVersionId).then((version) => {
+      if (version) {
+        setSyncMessage(`Linked to ${version.fileName} (v${version.versionNumber}). Run analysis to sync ATS score.`)
+      }
+    })
+  }, [linkedResumeId, linkedVersionId])
 
   async function handleAnalyze(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
+    setSyncMessage(null)
 
     if (!selectedFile) {
       setError('Please upload a resume file.')
@@ -41,6 +58,11 @@ export function ResumeCheckerPage() {
     try {
       const analysis = await analyzeResumeFile(selectedFile, jobDescription)
       setResult(analysis)
+
+      if (linkedResumeId && linkedVersionId) {
+        await resumeManagerApi.updateVersionScore(linkedResumeId, linkedVersionId, analysis.score)
+        setSyncMessage(`ATS score ${analysis.score} synced to Resume Manager.`)
+      }
     } catch (err) {
       setResult(null)
       setError(err instanceof Error ? err.message : 'Failed to analyze resume.')
@@ -54,20 +76,17 @@ export function ResumeCheckerPage() {
 
   return (
     <div className="app-shell">
-      <header className="home-header">
-        <div>
-          <h1>ATS Resume Checker</h1>
-          <p className="header-subtitle">Optimize your resume for applicant tracking systems</p>
-        </div>
-        <div className="home-actions">
-          <span className="home-user">{user?.name}</span>
-          <button type="button" className="btn-secondary" onClick={logout}>
-            Sign out
-          </button>
-        </div>
-      </header>
+      <DashboardNav />
 
       <main className="checker-main">
+        {linkedResumeId && linkedVersionId ? (
+          <div className="form-success linked-banner">
+            Resume Manager link active — scores will sync after analysis.
+          </div>
+        ) : null}
+
+        {syncMessage ? <div className="form-success">{syncMessage}</div> : null}
+
         <form className="checker-form" onSubmit={handleAnalyze}>
           <div className="checker-inputs">
             <ResumeUpload
@@ -124,10 +143,7 @@ export function ResumeCheckerPage() {
             <KeywordAnalysis keywords={result.keywords} />
             <MissingSkills skills={result.missingSkills} />
             <ResumeSuggestions suggestions={result.suggestions} />
-            <ResumeDownload
-              fileName={result.fileName}
-              content={improvedContent}
-            />
+            <ResumeDownload fileName={result.fileName} content={improvedContent} />
           </div>
         ) : null}
       </main>

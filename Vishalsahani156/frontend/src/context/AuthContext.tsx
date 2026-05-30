@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react'
 import { authApi, AuthApiError } from '../services/authApi'
+import { AUTH_BYPASS_FOR_TESTING, SIGNUP_ENABLED } from '../config/features'
 import type {
   ForgotPasswordPayload,
   LoginCredentials,
@@ -17,6 +18,14 @@ import type {
 } from '../types/auth'
 
 const TOKEN_KEY = 'auth_token'
+
+const MOCK_USER: User = {
+  id: 'dev-user',
+  email: 'demo@test.com',
+  name: 'Demo User',
+}
+
+const MOCK_TOKEN = 'dev-bypass-token'
 
 interface AuthContextValue {
   user: User | null
@@ -75,6 +84,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
+    if (AUTH_BYPASS_FOR_TESTING) {
+      setToken(MOCK_TOKEN)
+      setUser(MOCK_USER)
+      setIsLoading(false)
+      return
+    }
+
     const storedToken = readStoredToken()
     if (!storedToken) {
       setIsLoading(false)
@@ -99,6 +115,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(
     async (credentials: LoginCredentials) => {
+      if (AUTH_BYPASS_FOR_TESTING) {
+        persistSession(MOCK_TOKEN, {
+          ...MOCK_USER,
+          email: credentials.email || MOCK_USER.email,
+          name: MOCK_USER.name,
+        })
+        return
+      }
+
       const { token: nextToken, user: nextUser } = await authApi.login(credentials)
       persistSession(nextToken, nextUser)
     },
@@ -106,8 +131,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const signup = useCallback(
-    async (credentials: SignupCredentials) => {
-      const { token: nextToken, user: nextUser } = await authApi.signup(credentials)
+    async (_credentials: SignupCredentials) => {
+      if (!SIGNUP_ENABLED) {
+        throw new Error('Signup is temporarily disabled for feature testing.')
+      }
+
+      const { token: nextToken, user: nextUser } = await authApi.signup(_credentials)
       persistSession(nextToken, nextUser)
     },
     [persistSession],

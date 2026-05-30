@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { AUTH_BYPASS_FOR_TESTING, SIGNUP_ENABLED } from '../config/features'
 import { AuthLayout } from '../components/auth/AuthLayout'
 import { FormError } from '../components/auth/FormError'
 import { PasswordInput } from '../components/auth/PasswordInput'
@@ -21,7 +22,7 @@ export function LoginPage() {
 
     try {
       await login({ email, password })
-      navigate('/')
+      navigate('/resume-checker')
     } catch (err) {
       setError(err instanceof AuthApiError ? err.message : 'Unable to sign in')
     } finally {
@@ -30,8 +31,21 @@ export function LoginPage() {
   }
 
   return (
-    <AuthLayout title="Sign in" subtitle="Welcome back. Enter your credentials to continue.">
+    <AuthLayout
+      title="Sign in"
+      subtitle={
+        AUTH_BYPASS_FOR_TESTING
+          ? 'Auth validation is off for feature testing. Use any email/password or click below.'
+          : 'Welcome back. Enter your credentials to continue.'
+      }
+    >
       <FormError message={error} />
+
+      {AUTH_BYPASS_FOR_TESTING ? (
+        <div className="form-success" style={{ marginBottom: '1rem' }}>
+          Demo mode: backend auth is bypassed. Signup is disabled.
+        </div>
+      ) : null}
 
       <form className="auth-form" onSubmit={handleSubmit}>
         <div className="form-field">
@@ -40,34 +54,39 @@ export function LoginPage() {
             id="email"
             type="email"
             autoComplete="email"
-            required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="any email works in demo mode"
           />
         </div>
 
         <PasswordInput
           id="password"
           label="Password"
-          required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <div className="form-actions">
-          <Link to="/forgot-password" className="text-link">
-            Forgot password?
-          </Link>
-        </div>
+        {!AUTH_BYPASS_FOR_TESTING ? (
+          <div className="form-actions">
+            <Link to="/forgot-password" className="text-link">
+              Forgot password?
+            </Link>
+          </div>
+        ) : null}
 
         <button type="submit" className="btn-primary" disabled={submitting}>
-          {submitting ? 'Signing in…' : 'Sign in'}
+          {submitting ? 'Signing in…' : AUTH_BYPASS_FOR_TESTING ? 'Continue to app' : 'Sign in'}
         </button>
       </form>
 
-      <p className="auth-footer">
-        Don&apos;t have an account? <Link to="/signup">Create one</Link>
-      </p>
+      {SIGNUP_ENABLED ? (
+        <p className="auth-footer">
+          Don&apos;t have an account? <Link to="/signup">Create one</Link>
+        </p>
+      ) : (
+        <p className="auth-footer">Signup is temporarily disabled for feature testing.</p>
+      )}
     </AuthLayout>
   )
 }
