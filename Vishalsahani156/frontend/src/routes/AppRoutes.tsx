@@ -2,7 +2,11 @@ import type { ReactNode } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { SIGNUP_ENABLED } from '../config/features'
 import { useAuth } from '../context/AuthContext'
+import { BlogCategoryPage } from '../pages/BlogCategoryPage'
+import { BlogDetailPage } from '../pages/BlogDetailPage'
+import { BlogListPage } from '../pages/BlogListPage'
 import { ForgotPasswordPage } from '../pages/ForgotPasswordPage'
+import { JobAlertsPage } from '../pages/JobAlertsPage'
 import { LoginPage } from '../pages/LoginPage'
 import { ResetPasswordPage } from '../pages/ResetPasswordPage'
 import { ResumeCheckerPage } from '../pages/ResumeCheckerPage'
@@ -71,6 +75,38 @@ export function AppRoutes() {
         element={
           <ProtectedRoute>
             <ResumeManagerDetailPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/job-alerts"
+        element={
+          <ProtectedRoute>
+            <JobAlertsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/blog"
+        element={
+          <ProtectedRoute>
+            <BlogListPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/blog/category/:slug"
+        element={
+          <ProtectedRoute>
+            <BlogCategoryPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/blog/:slug"
+        element={
+          <ProtectedRoute>
+            <BlogDetailPage />
           </ProtectedRoute>
         }
       />
