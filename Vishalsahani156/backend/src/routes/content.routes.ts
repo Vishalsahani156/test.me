@@ -23,8 +23,7 @@ const contactLimiter = rateLimit({
 
 router.get('/about', async (_req, res, next) => {
   try {
-    const about = await contentService.getAbout()
-    res.json({ about })
+    res.json({ about: await contentService.getAbout() })
   } catch (err) {
     next(err)
   }
@@ -34,8 +33,7 @@ router.get('/faq', async (req, res, next) => {
   try {
     const category = typeof req.query.category === 'string' ? req.query.category : undefined
     const query = typeof req.query.q === 'string' ? req.query.q : undefined
-    const faq = await contentService.getFaq({ category, query })
-    res.json({ faq })
+    res.json({ faq: await contentService.getFaq({ category, query }) })
   } catch (err) {
     next(err)
   }
@@ -45,8 +43,7 @@ router.post('/contact', contactLimiter, optionalAuthenticate, async (req, res, n
   try {
     const body = contactSchema.parse(req.body)
     const full = Boolean(body.topic && body.priority)
-    const result = await contentService.submitContact(body, full, req.user?.id)
-    res.status(201).json(result)
+    res.status(201).json(await contentService.submitContact(body, full, req.user?.id))
   } catch (err) {
     next(err)
   }
