@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { DashboardNav } from '../components/layout/DashboardNav'
 import { BlogCard } from '../components/blog/BlogCard'
 import { BlogSearch } from '../components/blog/BlogSearch'
 import { CategoryFilter } from '../components/blog/CategoryFilter'
@@ -33,47 +32,43 @@ export function BlogListPage() {
   }, [page, query])
 
   return (
-    <div className="app-shell">
-      <DashboardNav />
-
-      <main className="manager-main">
-        <div className="page-header">
-          <div>
-            <h2>Blog</h2>
-            <p className="resume-card-subtitle">Career tips, resume advice, interview prep, and more.</p>
-          </div>
+    <main className="manager-main">
+      <div className="page-header">
+        <div>
+          <h2>Blog</h2>
+          <p className="resume-card-subtitle">Career tips, resume advice, interview prep, and more.</p>
         </div>
+      </div>
 
-        <BlogSearch initialQuery={query} />
-        <CategoryFilter />
+      <BlogSearch initialQuery={query} />
+      <CategoryFilter />
 
-        {loading ? <p className="loading-text">Loading articles…</p> : null}
+      {loading ? <p className="loading-text">Loading articles…</p> : null}
 
-        {!loading && featured && !query && page === 1 ? (
-          <Link to={`/blog/${featured.slug}`} className="featured-post">
-            <span className="featured-label">Featured</span>
-            <h3>{featured.title}</h3>
-            <p>{featured.excerpt}</p>
-            <span className="blog-card-meta">
-              {featured.author} · {featured.readMinutes} min read
-            </span>
-          </Link>
-        ) : null}
+      {!loading && featured && !query && page === 1 ? (
+        <Link to={`/blog/${featured.slug}`} className="featured-post">
+          <span className="featured-label">Featured</span>
+          <h3>{featured.title}</h3>
+          <p>{featured.excerpt}</p>
+          <span className="blog-card-meta">
+            {featured.author} · {featured.readMinutes} min read
+          </span>
+        </Link>
+      ) : null}
 
-        {!loading ? (
-          <>
-            <div className="blog-grid">
-              {posts.map((post) => (
-                <BlogCard key={post.id} post={post} />
-              ))}
-            </div>
-            {posts.length === 0 ? (
-              <p className="empty-note">No articles found. Try a different search or category.</p>
-            ) : null}
-            <Pagination page={page} totalPages={totalPages} basePath="/blog" query={query || undefined} />
-          </>
-        ) : null}
-      </main>
-    </div>
+      {!loading ? (
+        <>
+          <div className="blog-grid">
+            {posts.map((post) => (
+              <BlogCard key={post.id} post={post} />
+            ))}
+          </div>
+          {posts.length === 0 ? (
+            <p className="empty-note">No articles found. Try a different search or category.</p>
+          ) : null}
+          <Pagination page={page} totalPages={totalPages} basePath="/blog" query={query || undefined} />
+        </>
+      ) : null}
+    </main>
   )
 }

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { DashboardNav } from '../components/layout/DashboardNav'
 import { BlogCard } from '../components/blog/BlogCard'
 import { CategoryFilter } from '../components/blog/CategoryFilter'
 import { Pagination } from '../components/blog/Pagination'
@@ -30,33 +29,29 @@ export function BlogCategoryPage() {
   }, [slug, page])
 
   return (
-    <div className="app-shell">
-      <DashboardNav />
-
-      <main className="manager-main">
-        <div className="page-header">
-          <div>
-            <Link to="/blog" className="back-link">← All articles</Link>
-            <h2>{categoryName}</h2>
-          </div>
+    <main className="manager-main">
+      <div className="page-header">
+        <div>
+          <Link to="/blog" className="back-link">← All articles</Link>
+          <h2>{categoryName}</h2>
         </div>
+      </div>
 
-        <CategoryFilter activeCategory={slug} />
+      <CategoryFilter activeCategory={slug} />
 
-        {loading ? <p className="loading-text">Loading…</p> : null}
+      {loading ? <p className="loading-text">Loading…</p> : null}
 
-        {!loading ? (
-          <>
-            <div className="blog-grid">
-              {posts.map((post) => (
-                <BlogCard key={post.id} post={post} />
-              ))}
-            </div>
-            {posts.length === 0 ? <p className="empty-note">No posts in this category yet.</p> : null}
-            <Pagination page={page} totalPages={totalPages} basePath={`/blog/category/${slug}`} />
-          </>
-        ) : null}
-      </main>
-    </div>
+      {!loading ? (
+        <>
+          <div className="blog-grid">
+            {posts.map((post) => (
+              <BlogCard key={post.id} post={post} />
+            ))}
+          </div>
+          {posts.length === 0 ? <p className="empty-note">No posts in this category yet.</p> : null}
+          <Pagination page={page} totalPages={totalPages} basePath={`/blog/category/${slug}`} />
+        </>
+      ) : null}
+    </main>
   )
 }

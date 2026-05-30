@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { DashboardNav } from '../components/layout/DashboardNav'
 import { JobCard } from '../components/job-alerts/JobCard'
 import { JobPreferencesForm } from '../components/job-alerts/JobPreferencesForm'
 import { jobAlertsApi } from '../services/jobAlertsApi'
@@ -63,10 +62,7 @@ export function JobAlertsPage() {
   }
 
   return (
-    <div className="app-shell">
-      <DashboardNav />
-
-      <main className="manager-main">
+    <main className="manager-main">
         <div className="page-header">
           <div>
             <h2>Job Alerts</h2>
@@ -130,7 +126,6 @@ export function JobAlertsPage() {
         {!loading && activeTab === 'preferences' && preferences ? (
           <JobPreferencesForm preferences={preferences} onSave={handleSavePreferences} />
         ) : null}
-      </main>
-    </div>
+    </main>
   )
 }

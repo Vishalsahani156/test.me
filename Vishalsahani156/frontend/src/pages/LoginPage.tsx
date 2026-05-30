@@ -22,7 +22,7 @@ export function LoginPage() {
 
     try {
       await login({ email, password })
-      navigate('/resume-checker')
+      navigate('/dashboard')
     } catch (err) {
       setError(err instanceof AuthApiError ? err.message : 'Unable to sign in')
     } finally {

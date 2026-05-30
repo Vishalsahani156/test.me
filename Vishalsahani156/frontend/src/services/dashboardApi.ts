@@ -7,7 +7,6 @@ import type {
   DashboardResumeItem,
 } from '../types/dashboard'
 import { jobAlertsApi } from './jobAlertsApi'
-import { resumeManagerApi } from './resumeManagerApi'
 import { loadJobAlertsUserData } from '../utils/jobAlertsStorage'
 import { loadResumeManagerData } from '../utils/resumeManagerStorage'
 
