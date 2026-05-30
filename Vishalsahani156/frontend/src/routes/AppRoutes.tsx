@@ -1,8 +1,14 @@
 import type { ReactNode } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { SIGNUP_ENABLED } from '../config/features'
+import { DashboardLayout } from '../components/layout/DashboardLayout'
 import { useAuth } from '../context/AuthContext'
+import { BlogCategoryPage } from '../pages/BlogCategoryPage'
+import { BlogDetailPage } from '../pages/BlogDetailPage'
+import { BlogListPage } from '../pages/BlogListPage'
+import { DashboardPage } from '../pages/DashboardPage'
 import { ForgotPasswordPage } from '../pages/ForgotPasswordPage'
+import { JobAlertsPage } from '../pages/JobAlertsPage'
 import { LoginPage } from '../pages/LoginPage'
 import { ResetPasswordPage } from '../pages/ResetPasswordPage'
 import { ResumeCheckerPage } from '../pages/ResumeCheckerPage'
@@ -40,7 +46,7 @@ function GuestRoute({ children }: { children: ReactNode }) {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/resume-checker" replace />
+    return <Navigate to="/dashboard" replace />
   }
 
   return children
@@ -49,31 +55,25 @@ function GuestRoute({ children }: { children: ReactNode }) {
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/resume-checker" replace />} />
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
       <Route
-        path="/resume-checker"
         element={
           <ProtectedRoute>
-            <ResumeCheckerPage />
+            <DashboardLayout />
           </ProtectedRoute>
         }
-      />
-      <Route
-        path="/resume-manager"
-        element={
-          <ProtectedRoute>
-            <ResumeManagerPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/resume-manager/:resumeId"
-        element={
-          <ProtectedRoute>
-            <ResumeManagerDetailPage />
-          </ProtectedRoute>
-        }
-      />
+      >
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/resume-checker" element={<ResumeCheckerPage />} />
+        <Route path="/resume-manager" element={<ResumeManagerPage />} />
+        <Route path="/resume-manager/:resumeId" element={<ResumeManagerDetailPage />} />
+        <Route path="/job-alerts" element={<JobAlertsPage />} />
+        <Route path="/blog" element={<BlogListPage />} />
+        <Route path="/blog/category/:slug" element={<BlogCategoryPage />} />
+        <Route path="/blog/:slug" element={<BlogDetailPage />} />
+      </Route>
+
       <Route
         path="/login"
         element={
@@ -96,7 +96,7 @@ export function AppRoutes() {
       />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="*" element={<Navigate to="/resume-checker" replace />} />
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   )
 }

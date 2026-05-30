@@ -7,8 +7,8 @@ export function DashboardNav() {
   return (
     <header className="home-header dashboard-nav">
       <div>
-        <h1>Resume Toolkit</h1>
-        <p className="header-subtitle">ATS checker & resume version manager</p>
+        <h1>Career Toolkit</h1>
+        <p className="header-subtitle">Resume tools, job alerts & career blog</p>
       </div>
 
       <nav className="dashboard-nav-links">
@@ -16,7 +16,13 @@ export function DashboardNav() {
           ATS Checker
         </NavLink>
         <NavLink to="/resume-manager" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
-          Resume Manager
+          Resumes
+        </NavLink>
+        <NavLink to="/job-alerts" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+          Job Alerts
+        </NavLink>
+        <NavLink to="/blog" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+          Blog
         </NavLink>
       </nav>
 

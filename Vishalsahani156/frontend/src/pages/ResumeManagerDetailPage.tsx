@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { DashboardNav } from '../components/layout/DashboardNav'
 import { ResumeHistoryTimeline } from '../components/resume-manager/ResumeHistoryTimeline'
 import { ResumeScoreChart } from '../components/resume-manager/ResumeScoreChart'
 import { ResumeVersionCard } from '../components/resume-manager/ResumeVersionCard'
@@ -92,9 +91,7 @@ export function ResumeManagerDetailPage() {
   }
 
   return (
-    <div className="app-shell">
-      <DashboardNav />
-
+    <>
       <main className="manager-main">
         <div className="page-header">
           <div>
@@ -146,6 +143,6 @@ export function ResumeManagerDetailPage() {
         onClose={() => setUploadOpen(false)}
         onUpload={handleUpload}
       />
-    </div>
+    </>
   )
 }

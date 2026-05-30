@@ -1,6 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { DashboardNav } from '../components/layout/DashboardNav'
 import { AtsScoreCard } from '../components/resume/AtsScoreCard'
 import { KeywordAnalysis } from '../components/resume/KeywordAnalysis'
 import { MissingSkills } from '../components/resume/MissingSkills'
@@ -75,10 +74,7 @@ export function ResumeCheckerPage() {
     result && jobDescription ? getImprovedResumeContent(result, jobDescription) : ''
 
   return (
-    <div className="app-shell">
-      <DashboardNav />
-
-      <main className="checker-main">
+    <main className="checker-main">
         {linkedResumeId && linkedVersionId ? (
           <div className="form-success linked-banner">
             Resume Manager link active — scores will sync after analysis.
@@ -146,7 +142,6 @@ export function ResumeCheckerPage() {
             <ResumeDownload fileName={result.fileName} content={improvedContent} />
           </div>
         ) : null}
-      </main>
-    </div>
+    </main>
   )
 }

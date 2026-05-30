@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DashboardNav } from '../components/layout/DashboardNav'
 import { resumeManagerApi } from '../services/resumeManagerApi'
 import type { ManagedResume } from '../types/resumeManager'
 
@@ -23,10 +22,7 @@ export function ResumeManagerPage() {
   }, [])
 
   return (
-    <div className="app-shell">
-      <DashboardNav />
-
-      <main className="manager-main">
+    <main className="manager-main">
         <div className="page-header">
           <div>
             <h2>Resume Manager</h2>
@@ -61,7 +57,6 @@ export function ResumeManagerPage() {
             })}
           </div>
         ) : null}
-      </main>
-    </div>
+    </main>
   )
 }
