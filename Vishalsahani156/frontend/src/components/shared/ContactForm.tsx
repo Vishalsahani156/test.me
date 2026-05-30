@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import { contactApi } from '../../services/contactApi'
+import { ApiError } from '../../services/httpClient'
 import {
   CONTACT_PRIORITIES,
   CONTACT_TOPICS,
@@ -70,18 +71,18 @@ export function ContactForm({
     }
 
     try {
-      const result = await contactApi.submitContactForm(payload, isFull)
+      const result = await contactApi.submitContactForm(payload)
       setSuccess(result.message)
       resetForm()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to send message.')
+      setError(err instanceof ApiError ? err.message : 'Failed to send message.')
     } finally {
       setSubmitting(false)
     }
   }
 
   return (
-    <form className={className} onSubmit={handleSubmit}>
+    <form className={className} noValidate onSubmit={handleSubmit}>
       {title ? <h3>{title}</h3> : null}
 
       <div className="form-field">
@@ -90,7 +91,6 @@ export function ContactForm({
           id={`${idPrefix}-name`}
           value={name}
           onChange={(e) => setName(e.target.value)}
-          required
         />
       </div>
 
@@ -101,7 +101,6 @@ export function ContactForm({
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
         />
       </div>
 
@@ -112,7 +111,6 @@ export function ContactForm({
             id={`${idPrefix}-topic`}
             value={topic}
             onChange={(e) => setTopic(e.target.value as ContactTopic)}
-            required
           >
             {CONTACT_TOPICS.map((item) => (
               <option key={item.value} value={item.value}>
@@ -129,7 +127,6 @@ export function ContactForm({
           id={`${idPrefix}-subject`}
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
-          required
         />
       </div>
 
@@ -149,7 +146,6 @@ export function ContactForm({
           maxLength={isFull ? MESSAGE_MAX : undefined}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          required
         />
       </div>
 
@@ -160,7 +156,6 @@ export function ContactForm({
             id={`${idPrefix}-priority`}
             value={priority}
             onChange={(e) => setPriority(e.target.value as ContactPriority)}
-            required
           >
             {CONTACT_PRIORITIES.map((item) => (
               <option key={item.value} value={item.value}>

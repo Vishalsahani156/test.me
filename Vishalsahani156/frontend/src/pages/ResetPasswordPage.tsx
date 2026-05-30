@@ -37,12 +37,6 @@ export function ResetPasswordPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
-
-    if (password !== confirmPassword) {
-      setError('Passwords do not match')
-      return
-    }
-
     setSubmitting(true)
 
     try {
@@ -59,13 +53,11 @@ export function ResetPasswordPage() {
     <AuthLayout title="Reset password" subtitle="Choose a new password for your account.">
       <FormError message={error} />
 
-      <form className="auth-form" onSubmit={handleSubmit}>
+      <form className="auth-form" noValidate onSubmit={handleSubmit}>
         <PasswordInput
           id="password"
           label="New password"
           autoComplete="new-password"
-          required
-          minLength={8}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -74,8 +66,6 @@ export function ResetPasswordPage() {
           id="confirmPassword"
           label="Confirm password"
           autoComplete="new-password"
-          required
-          minLength={8}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />

@@ -42,14 +42,13 @@ export function ForgotPasswordPage() {
         </div>
       ) : null}
 
-      <form className="auth-form" onSubmit={handleSubmit}>
+      <form className="auth-form" noValidate onSubmit={handleSubmit}>
         <div className="form-field">
           <label htmlFor="email">Email</label>
           <input
             id="email"
             type="email"
             autoComplete="email"
-            required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />

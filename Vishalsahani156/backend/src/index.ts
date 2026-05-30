@@ -12,7 +12,7 @@ async function start() {
   app.listen(env.port, () => {
     console.log(`API running on http://localhost:${env.port}`)
     console.log(`Swagger docs: http://localhost:${env.port}/api/docs`)
-    console.log(`Health check: http://localhost:${env.port}/api/v1/health`)
+    console.log(`Health check: http://localhost:${env.port}/api/health`)
   })
 }
 
