@@ -49,10 +49,3 @@ export interface AboutData {
   team: TeamMember[]
   contact: ContactInfo
 }
-
-export interface ContactFormPayload {
-  name: string
-  email: string
-  subject: string
-  message: string
-}

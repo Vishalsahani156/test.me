@@ -79,7 +79,9 @@ export function SignupPage() {
       </p>
 
       <p className="auth-footer">
-        <Link to="/about">About Career Toolkit</Link>
+        <Link to="/about">About</Link>
+        {' · '}
+        <Link to="/contact">Contact</Link>
       </p>
     </AuthLayout>
   )

@@ -28,6 +28,9 @@ export function AboutAnchorNav() {
               {item.label}
             </button>
           ))}
+          <Link to="/contact" className="about-anchor-btn about-nav-link">
+            Contact page
+          </Link>
         </nav>
 
         <Link to={isAuthenticated ? '/dashboard' : '/login'} className="btn-secondary btn-sm btn-link">

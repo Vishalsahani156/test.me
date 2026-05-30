@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { to: '/job-alerts', label: 'Job Alerts' },
   { to: '/blog', label: 'Blog' },
   { to: '/about', label: 'About' },
+  { to: '/contact', label: 'Contact' },
 ]
 
 export function DashboardLayout() {
