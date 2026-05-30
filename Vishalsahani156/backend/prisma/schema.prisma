@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String               @id @default(cuid())
+  email               String               @unique
+  name                String
+  passwordHash        String
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  refreshTokens       RefreshToken[]
+  passwordResetTokens PasswordResetToken[]
+  jobPreference       JobPreference?
+  savedJobs           SavedJob[]
+  activities          UserActivity[]
+  resumes             Resume[]
+  resumeHistory       ResumeHistory[]
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Job {
+  id          String     @id
+  title       String
+  company     String
+  location    String
+  remote      Boolean    @default(false)
+  salaryMin   Int
+  salaryMax   Int
+  experience  String
+  skills      String[]
+  description String
+  postedAt    DateTime
+  savedBy     SavedJob[]
+}
+
+model JobPreference {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String   @default("")
+  locations String[] @default([])
+  skills    String[] @default([])
+  experience String  @default("")
+  remote    Boolean  @default(false)
+  salaryMin Int?
+  salaryMax Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SavedJob {
+  id        String   @id @default(cuid())
+  userId    String
+  jobId     String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, jobId])
+  @@index([userId])
+}
+
+enum ActivityType {
+  upload
+  score_change
+  activation
+  deletion
+  job_saved
+  job_unsaved
+  preferences_updated
+}
+
+model UserActivity {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        ActivityType
+  title       String
+  description String
+  link        String?
+  createdAt   DateTime     @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model Resume {
+  id              String          @id @default(cuid())
+  userId          String
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title           String
+  description     String?
+  activeVersionId String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  versions        ResumeVersion[]
+  history         ResumeHistory[]
+
+  @@index([userId])
+}
+
+model ResumeVersion {
+  id            String   @id @default(cuid())
+  resumeId      String
+  resume        Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  versionNumber Int
+  label         String
+  notes         String?
+  fileName      String
+  fileType      String
+  fileSize      Int      @default(0)
+  fileContent   String   @default("") @db.Text
+  atsScore      Int?
+  isActive      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@index([resumeId])
+}
+
+model ResumeHistory {
+  id            String   @id @default(cuid())
+  userId        String
+  resumeId      String
+  versionId     String?
+  type          String
+  description   String
+  score         Int?
+  previousScore Int?
+  createdAt     DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resume        Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@index([userId, resumeId, createdAt])
+}
