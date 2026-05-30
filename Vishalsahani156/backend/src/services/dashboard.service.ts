@@ -1,6 +1,7 @@
 import type { Prisma } from '@prisma/client'
 import { prisma } from '../lib/prisma.js'
 import { jobsService } from './jobs.service.js'
+import { resumeService } from './resume.service.js'
 
 type ResumeWithVersions = Prisma.ResumeGetPayload<{ include: { versions: true } }>
 
@@ -169,6 +170,8 @@ function buildAnalytics(
 
 export const dashboardService = {
   async getDashboardData(userId: string): Promise<DashboardDataDto> {
+    await resumeService.ensureDemoResumes(userId)
+
     const [resumes, recommendedJobs, activities, savedJobIds] = await Promise.all([
       prisma.resume.findMany({
         where: { userId },

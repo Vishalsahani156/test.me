@@ -1,3 +1,5 @@
+/// <reference types="multer" />
+
 import type { Request } from 'express'
 
 declare global {

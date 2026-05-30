@@ -1,5 +1,4 @@
 import type { ActivityType } from '@prisma/client'
-import type { Express } from 'express'
 import { prisma } from '../lib/prisma.js'
 import { AppError } from '../utils/errors.js'
 import { activityService } from './activity.service.js'
@@ -50,7 +49,7 @@ async function addHistory(input: {
   return entry
 }
 
-async function seedDemoResumes(userId: string): Promise<void> {
+async function ensureDemoResumes(userId: string): Promise<void> {
   const count = await prisma.resume.count({ where: { userId } })
   if (count > 0) return
 
@@ -160,8 +159,10 @@ async function seedDemoResumes(userId: string): Promise<void> {
 }
 
 export const resumeService = {
+  ensureDemoResumes,
+
   async listResumes(userId: string): Promise<ManagedResumeDto[]> {
-    await seedDemoResumes(userId)
+    await ensureDemoResumes(userId)
     const resumes = await prisma.resume.findMany({
       where: { userId },
       include: resumeInclude,
@@ -191,7 +192,7 @@ export const resumeService = {
   },
 
   async getHistory(userId: string, resumeId?: string, filter = 'all') {
-    await seedDemoResumes(userId)
+    await ensureDemoResumes(userId)
 
     const entries = await prisma.resumeHistory.findMany({
       where: {
