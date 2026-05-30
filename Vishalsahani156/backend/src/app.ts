@@ -6,6 +6,7 @@ import swaggerUi from 'swagger-ui-express'
 import { env } from './config/env.js'
 import { swaggerSpec } from './config/swagger.js'
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js'
+import adminRoutes from './routes/admin.routes.js'
 import authRoutes from './routes/auth.routes.js'
 import blogRoutes from './routes/blog.routes.js'
 import contentRoutes from './routes/content.routes.js'
@@ -41,6 +42,12 @@ export function createApp() {
     message: { message: 'Too many auth attempts, please try again later.' },
   })
 
+  const adminLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 120,
+    message: { message: 'Too many admin requests, please try again later.' },
+  })
+
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
   app.get('/api/docs.json', (_req, res) => {
     res.json(swaggerSpec)
@@ -53,6 +60,7 @@ export function createApp() {
   app.use('/api/resumes', resumesRoutes)
   app.use('/api/blog', blogRoutes)
   app.use('/api/content', contentRoutes)
+  app.use('/api/admin', adminLimiter, adminRoutes)
 
   app.use(notFoundHandler)
   app.use(errorHandler)

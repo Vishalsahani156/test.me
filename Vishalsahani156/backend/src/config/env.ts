@@ -22,4 +22,9 @@ export const env = {
     accessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN ?? '15m',
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN ?? '7d',
   },
+  admin: {
+    email: (process.env.ADMIN_EMAIL ?? 'admin@careertoolkit.in').trim().toLowerCase(),
+    password: process.env.ADMIN_PASSWORD ?? 'Admin@12345',
+    name: process.env.ADMIN_NAME ?? 'Platform Admin',
+  },
 }

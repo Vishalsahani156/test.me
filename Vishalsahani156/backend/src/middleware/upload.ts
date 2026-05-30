@@ -1,10 +1,8 @@
 import multer from 'multer'
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024
-
 export const uploadResumeFile = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: MAX_FILE_SIZE },
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter(_req, file, cb) {
     const name = file.originalname.toLowerCase()
     const allowed =

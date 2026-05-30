@@ -12,7 +12,7 @@ export function optionalAuthenticate(req: Request, _res: Response, next: NextFun
     const payload = verifyAccessToken(header.slice('Bearer '.length))
     req.user = { id: payload.sub, email: payload.email }
   } catch {
-    // Public routes ignore invalid tokens
+    // ignore invalid token on public routes
   }
 
   next()

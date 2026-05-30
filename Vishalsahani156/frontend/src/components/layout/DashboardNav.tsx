@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
 export function DashboardNav() {
-  const { user, logout } = useAuth()
+  const { user, logout, isAdmin } = useAuth()
 
   return (
     <header className="home-header dashboard-nav">
@@ -24,6 +24,11 @@ export function DashboardNav() {
         <NavLink to="/blog" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
           Blog
         </NavLink>
+        {isAdmin ? (
+          <NavLink to="/admin" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+            Admin
+          </NavLink>
+        ) : null}
       </nav>
 
       <div className="home-actions">
