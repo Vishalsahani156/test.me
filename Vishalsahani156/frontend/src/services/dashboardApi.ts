@@ -53,7 +53,7 @@ function buildAtsOverview(): DashboardAtsOverview {
     .pop()
 
   const delta =
-    activeVersion.atsScore !== null && prevVersion?.atsScore !== undefined
+    activeVersion.atsScore !== null && prevVersion && prevVersion.atsScore !== null
       ? activeVersion.atsScore - prevVersion.atsScore
       : null
 

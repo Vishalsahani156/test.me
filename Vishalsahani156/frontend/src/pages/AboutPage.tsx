@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { mockAboutData } from '../../data/mockAboutData'
+import { mockAboutData } from '../data/mockAboutData'
 import { AboutAnchorNav } from '../components/about/AboutAnchorNav'
 import { ContactSection } from '../components/about/ContactSection'
 
