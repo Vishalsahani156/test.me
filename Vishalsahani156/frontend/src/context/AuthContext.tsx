@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { authApi } from '../services/authApi'
+import { authApi, AuthApiError } from '../services/authApi'
 import type {
   ForgotPasswordPayload,
   LoginCredentials,
@@ -33,7 +33,28 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 function readStoredToken(): string | null {
-  return localStorage.getItem(TOKEN_KEY)
+  try {
+    return localStorage.getItem(TOKEN_KEY)
+  } catch (e) {
+    console.error('Failed to read auth token from localStorage:', e)
+    return null
+  }
+}
+
+function setStoredToken(token: string): void {
+  try {
+    localStorage.setItem(TOKEN_KEY, token)
+  } catch (e) {
+    console.error('Failed to write auth token to localStorage:', e)
+  }
+}
+
+function removeStoredToken(): void {
+  try {
+    localStorage.removeItem(TOKEN_KEY)
+  } catch (e) {
+    console.error('Failed to remove auth token from localStorage:', e)
+  }
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -42,13 +63,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   const persistSession = useCallback((nextToken: string, nextUser: User) => {
-    localStorage.setItem(TOKEN_KEY, nextToken)
+    setStoredToken(nextToken)
     setToken(nextToken)
     setUser(nextUser)
   }, [])
 
   const logout = useCallback(() => {
-    localStorage.removeItem(TOKEN_KEY)
+    removeStoredToken()
     setToken(null)
     setUser(null)
   }, [])
@@ -66,10 +87,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setToken(storedToken)
         setUser(profile)
       })
-      .catch(() => {
-        localStorage.removeItem(TOKEN_KEY)
-        setToken(null)
-        setUser(null)
+      .catch((err) => {
+        if (err instanceof AuthApiError && (err.status === 401 || err.status === 403)) {
+          removeStoredToken()
+          setToken(null)
+          setUser(null)
+        }
       })
       .finally(() => setIsLoading(false))
   }, [])

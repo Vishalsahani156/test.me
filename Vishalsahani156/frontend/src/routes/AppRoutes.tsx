@@ -1,32 +1,13 @@
+import type { ReactNode } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { ForgotPasswordPage } from '../pages/ForgotPasswordPage'
 import { LoginPage } from '../pages/LoginPage'
 import { ResetPasswordPage } from '../pages/ResetPasswordPage'
+import { ResumeCheckerPage } from '../pages/ResumeCheckerPage'
 import { SignupPage } from '../pages/SignupPage'
 
-function HomePage() {
-  const { user, logout } = useAuth()
-
-  return (
-    <div className="home-page">
-      <header className="home-header">
-        <h1>Invoice Dashboard</h1>
-        <div className="home-actions">
-          <span className="home-user">Signed in as {user?.email}</span>
-          <button type="button" className="btn-secondary" onClick={logout}>
-            Sign out
-          </button>
-        </div>
-      </header>
-      <main className="home-main">
-        <p>Welcome, {user?.name}. Your dashboard will live here.</p>
-      </main>
-    </div>
-  )
-}
-
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
+function ProtectedRoute({ children }: { children: ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth()
 
   if (isLoading) {
@@ -44,7 +25,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return children
 }
 
-function GuestRoute({ children }: { children: React.ReactNode }) {
+function GuestRoute({ children }: { children: ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth()
 
   if (isLoading) {
@@ -69,7 +50,7 @@ export function AppRoutes() {
         path="/"
         element={
           <ProtectedRoute>
-            <HomePage />
+            <ResumeCheckerPage />
           </ProtectedRoute>
         }
       />

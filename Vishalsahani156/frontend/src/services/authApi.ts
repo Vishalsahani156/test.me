@@ -8,10 +8,13 @@ import type {
 
 const API_BASE = import.meta.env.VITE_API_URL ?? '/api'
 
-class AuthApiError extends Error {
-  constructor(message: string) {
+export class AuthApiError extends Error {
+  status?: number
+
+  constructor(message: string, status?: number) {
     super(message)
     this.name = 'AuthApiError'
+    this.status = status
   }
 }
 
@@ -29,6 +32,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   if (!response.ok) {
     throw new AuthApiError(
       typeof data.message === 'string' ? data.message : 'Something went wrong',
+      response.status,
     )
   }
 
@@ -74,5 +78,3 @@ export const authApi = {
     })
   },
 }
-
-export { AuthApiError }
