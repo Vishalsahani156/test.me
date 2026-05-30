@@ -1,0 +1,120 @@
+export interface SeedJob {
+  id: string
+  title: string
+  company: string
+  location: string
+  remote: boolean
+  salaryMin: number
+  salaryMax: number
+  experience: string
+  skills: string[]
+  description: string
+  postedAt: string
+}
+
+export const SEED_JOBS: SeedJob[] = [
+  {
+    id: 'job-1',
+    title: 'Full Stack Engineer',
+    company: 'NovaTech',
+    location: 'Bangalore, India',
+    remote: true,
+    salaryMin: 1200000,
+    salaryMax: 1800000,
+    experience: '2-4 years',
+    skills: ['react', 'node.js', 'typescript', 'mongodb', 'rest api'],
+    description: 'Build scalable web apps with React and Node.js on a product-focused team.',
+    postedAt: '2026-05-28T08:00:00.000Z',
+  },
+  {
+    id: 'job-2',
+    title: 'Frontend Developer',
+    company: 'PixelWave',
+    location: 'Remote',
+    remote: true,
+    salaryMin: 900000,
+    salaryMax: 1400000,
+    experience: '1-3 years',
+    skills: ['react', 'javascript', 'css', 'vite', 'accessibility'],
+    description: 'Craft polished UI experiences for a fast-growing SaaS platform.',
+    postedAt: '2026-05-27T10:00:00.000Z',
+  },
+  {
+    id: 'job-3',
+    title: 'Backend Engineer',
+    company: 'CloudNest',
+    location: 'Hyderabad, India',
+    remote: false,
+    salaryMin: 1400000,
+    salaryMax: 2200000,
+    experience: '3-5 years',
+    skills: ['node.js', 'express', 'postgresql', 'docker', 'aws'],
+    description: 'Design APIs and services powering enterprise integrations.',
+    postedAt: '2026-05-26T12:00:00.000Z',
+  },
+  {
+    id: 'job-4',
+    title: 'Product Manager',
+    company: 'LaunchPad',
+    location: 'Mumbai, India',
+    remote: true,
+    salaryMin: 1500000,
+    salaryMax: 2500000,
+    experience: '4-6 years',
+    skills: ['product strategy', 'agile', 'analytics', 'roadmaps', 'stakeholder management'],
+    description: 'Own roadmap and delivery for a B2B analytics product.',
+    postedAt: '2026-05-25T09:00:00.000Z',
+  },
+  {
+    id: 'job-5',
+    title: 'DevOps Engineer',
+    company: 'StackForge',
+    location: 'Pune, India',
+    remote: true,
+    salaryMin: 1300000,
+    salaryMax: 2000000,
+    experience: '2-5 years',
+    skills: ['kubernetes', 'ci/cd', 'terraform', 'aws', 'linux'],
+    description: 'Improve deployment pipelines and cloud infrastructure reliability.',
+    postedAt: '2026-05-24T11:00:00.000Z',
+  },
+  {
+    id: 'job-6',
+    title: 'Data Analyst',
+    company: 'InsightHub',
+    location: 'Delhi, India',
+    remote: false,
+    salaryMin: 700000,
+    salaryMax: 1100000,
+    experience: '1-3 years',
+    skills: ['sql', 'python', 'excel', 'tableau', 'statistics'],
+    description: 'Turn product data into dashboards and actionable insights.',
+    postedAt: '2026-05-23T08:30:00.000Z',
+  },
+  {
+    id: 'job-7',
+    title: 'React Native Developer',
+    company: 'MobileFirst',
+    location: 'Remote',
+    remote: true,
+    salaryMin: 1000000,
+    salaryMax: 1600000,
+    experience: '2-4 years',
+    skills: ['react', 'react native', 'typescript', 'mobile', 'rest api'],
+    description: 'Ship cross-platform mobile features for a consumer fintech app.',
+    postedAt: '2026-05-22T14:00:00.000Z',
+  },
+  {
+    id: 'job-8',
+    title: 'QA Automation Engineer',
+    company: 'QualityLoop',
+    location: 'Chennai, India',
+    remote: true,
+    salaryMin: 800000,
+    salaryMax: 1300000,
+    experience: '2-4 years',
+    skills: ['selenium', 'javascript', 'cypress', 'api testing', 'ci/cd'],
+    description: 'Build automated test suites for web and API regression coverage.',
+    postedAt: '2026-05-21T10:00:00.000Z',
+  },
+]

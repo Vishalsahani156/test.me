@@ -73,8 +73,8 @@ export const authApi = {
   },
 
   getMe(token: string): Promise<AuthResponse['user']> {
-    return request<AuthResponse['user']>('/auth/me', {
+    return request<{ user: AuthResponse['user'] }>('/auth/me', {
       headers: authHeaders(token),
-    })
+    }).then((data) => data.user)
   },
 }
