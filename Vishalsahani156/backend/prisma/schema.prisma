@@ -20,6 +20,7 @@ model User {
   savedJobs           SavedJob[]
   activities          UserActivity[]
   resumes             Resume[]
+  resumeHistory       ResumeHistory[]
 }
 
 model RefreshToken {
@@ -119,6 +120,7 @@ model Resume {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   versions        ResumeVersion[]
+  history         ResumeHistory[]
 
   @@index([userId])
 }
@@ -129,12 +131,30 @@ model ResumeVersion {
   resume        Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
   versionNumber Int
   label         String
+  notes         String?
   fileName      String
   fileType      String
   fileSize      Int      @default(0)
+  fileContent   String   @default("") @db.Text
   atsScore      Int?
   isActive      Boolean  @default(false)
   createdAt     DateTime @default(now())
 
   @@index([resumeId])
+}
+
+model ResumeHistory {
+  id            String   @id @default(cuid())
+  userId        String
+  resumeId      String
+  versionId     String?
+  type          String
+  description   String
+  score         Int?
+  previousScore Int?
+  createdAt     DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resume        Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@index([userId, resumeId, createdAt])
 }

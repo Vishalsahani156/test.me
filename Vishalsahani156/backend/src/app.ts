@@ -10,6 +10,7 @@ import authRoutes from './routes/auth.routes.js'
 import dashboardRoutes from './routes/dashboard.routes.js'
 import healthRoutes from './routes/health.routes.js'
 import jobsRoutes from './routes/jobs.routes.js'
+import resumesRoutes from './routes/resumes.routes.js'
 
 export function createApp() {
   const app = express()
@@ -47,6 +48,7 @@ export function createApp() {
   app.use('/api/auth', authLimiter, authRoutes)
   app.use('/api/jobs', jobsRoutes)
   app.use('/api/dashboard', dashboardRoutes)
+  app.use('/api/resumes', resumesRoutes)
 
   app.use(notFoundHandler)
   app.use(errorHandler)
