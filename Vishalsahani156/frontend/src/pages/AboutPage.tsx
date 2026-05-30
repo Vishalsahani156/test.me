@@ -1,10 +1,40 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { mockAboutData } from '../data/mockAboutData'
+import { aboutApi } from '../services/aboutApi'
 import { AboutAnchorNav } from '../components/about/AboutAnchorNav'
 import { ContactSection } from '../components/about/ContactSection'
+import type { AboutData } from '../types/about'
 
 export function AboutPage() {
-  const { hero, mission, values, stats, features, team, contact } = mockAboutData
+  const [data, setData] = useState<AboutData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    aboutApi
+      .getAbout()
+      .then(setData)
+      .catch((err) => setError(err instanceof Error ? err.message : 'Failed to load about page'))
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="about-page">
+        <p className="loading-text">Loading…</p>
+      </div>
+    )
+  }
+
+  if (error || !data) {
+    return (
+      <div className="about-page">
+        <div className="form-error">{error ?? 'About content unavailable'}</div>
+      </div>
+    )
+  }
+
+  const { hero, mission, values, stats, features, team, contact } = data
 
   return (
     <div className="about-page">

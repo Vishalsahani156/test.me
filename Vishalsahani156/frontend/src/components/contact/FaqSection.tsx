@@ -1,29 +1,26 @@
-import { useMemo, useState } from 'react'
-import { mockFaqData } from '../../data/mockFaqData'
-import { FAQ_CATEGORIES, type FaqCategory } from '../../types/contact'
+import { useEffect, useMemo, useState } from 'react'
+import { faqApi } from '../../services/faqApi'
+import { FAQ_CATEGORIES, type FaqCategory, type FaqItem } from '../../types/contact'
 
 export function FaqSection() {
+  const [items, setItems] = useState<FaqItem[]>([])
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<FaqCategory>('all')
-  const [openId, setOpenId] = useState<string | null>(mockFaqData[0]?.id ?? null)
+  const [openId, setOpenId] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const filtered = useMemo(() => {
-    let items = [...mockFaqData]
-
-    if (category !== 'all') {
-      items = items.filter((item) => item.category === category)
-    }
-
-    if (query.trim()) {
-      const q = query.trim().toLowerCase()
-      items = items.filter(
-        (item) =>
-          item.question.toLowerCase().includes(q) || item.answer.toLowerCase().includes(q),
-      )
-    }
-
-    return items
+  useEffect(() => {
+    setLoading(true)
+    faqApi
+      .getFaq({ category, query })
+      .then((faq) => {
+        setItems(faq)
+        setOpenId(faq[0]?.id ?? null)
+      })
+      .finally(() => setLoading(false))
   }, [category, query])
+
+  const filtered = useMemo(() => items, [items])
 
   return (
     <section id="faq" className="about-section faq-section">
@@ -61,7 +58,9 @@ export function FaqSection() {
         ))}
       </div>
 
-      {filtered.length ? (
+      {loading ? <p className="loading-text">Loading FAQs…</p> : null}
+
+      {!loading && filtered.length ? (
         <div className="faq-accordion">
           {filtered.map((item) => {
             const isOpen = openId === item.id
@@ -81,9 +80,11 @@ export function FaqSection() {
             )
           })}
         </div>
-      ) : (
+      ) : null}
+
+      {!loading && !filtered.length ? (
         <p className="empty-note">No FAQs match your search. Try another keyword or category.</p>
-      )}
+      ) : null}
     </section>
   )
 }

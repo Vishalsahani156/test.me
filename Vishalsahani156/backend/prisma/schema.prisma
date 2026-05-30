@@ -21,6 +21,7 @@ model User {
   activities          UserActivity[]
   resumes             Resume[]
   resumeHistory       ResumeHistory[]
+  contactSubmissions  ContactSubmission[]
 }
 
 model RefreshToken {
@@ -157,4 +158,62 @@ model ResumeHistory {
   resume        Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 
   @@index([userId, resumeId, createdAt])
+}
+
+model BlogCategory {
+  slug        String     @id
+  name        String
+  description String
+  posts       BlogPost[]
+}
+
+model BlogPost {
+  id           String       @id
+  slug         String       @unique
+  title        String
+  excerpt      String
+  content      String       @db.Text
+  categorySlug String
+  category     BlogCategory @relation(fields: [categorySlug], references: [slug])
+  tags         String[]
+  author       String
+  publishedAt  DateTime
+  readMinutes  Int
+  featured     Boolean      @default(false)
+
+  @@index([categorySlug])
+  @@index([publishedAt])
+}
+
+model ContentBlock {
+  key       String   @id
+  payload   Json
+  updatedAt DateTime @updatedAt
+}
+
+model FaqItem {
+  id        String @id
+  category  String
+  question  String
+  answer    String @db.Text
+  sortOrder Int    @default(0)
+
+  @@index([category])
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  ticketId  String   @unique
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name      String
+  email     String
+  subject   String
+  message   String   @db.Text
+  topic     String?
+  priority  String?
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([createdAt])
 }
