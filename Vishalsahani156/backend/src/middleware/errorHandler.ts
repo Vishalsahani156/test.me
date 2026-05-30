@@ -25,6 +25,11 @@ export function errorHandler(
     return
   }
 
+  if (err instanceof Error && err.message.includes('Only PDF and DOCX')) {
+    res.status(400).json({ message: err.message })
+    return
+  }
+
   console.error(err)
   res.status(500).json({ message: 'Internal server error' })
 }

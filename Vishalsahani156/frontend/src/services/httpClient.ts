@@ -23,7 +23,7 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}): Pr
   const token = readToken()
   const response = await fetch(`${API_BASE}${path}`, {
     headers: {
-      'Content-Type': 'application/json',
+      ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options.headers,
     },
@@ -40,4 +40,12 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}): Pr
   }
 
   return data as T
+}
+
+export async function apiUpload<T>(
+  path: string,
+  formData: FormData,
+  method = 'POST',
+): Promise<T> {
+  return apiRequest<T>(path, { method, body: formData })
 }
