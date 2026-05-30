@@ -6,21 +6,13 @@ import { resumeService } from '../services/resume.service.js'
 import { AppError } from '../utils/errors.js'
 
 const router = Router()
-
 const createResumeSchema = z.object({
-  title: z.string().trim().min(1, 'Title is required').max(120),
+  title: z.string().trim().min(1).max(120),
   description: z.string().trim().max(500).optional(),
 })
 
 router.use(authenticate)
 
-/**
- * @openapi
- * /api/resumes:
- *   get:
- *     tags: [Resumes]
- *     summary: List managed resumes
- */
 router.get('/', async (req, res, next) => {
   try {
     const resumes = await resumeService.listResumes(req.user!.id)
@@ -30,13 +22,6 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-/**
- * @openapi
- * /api/resumes:
- *   post:
- *     tags: [Resumes]
- *     summary: Create a new resume collection
- */
 router.post('/', async (req, res, next) => {
   try {
     const body = createResumeSchema.parse(req.body)
@@ -47,31 +32,6 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-/**
- * @openapi
- * /api/resumes/history:
- *   get:
- *     tags: [Resumes]
- *     summary: Resume activity history
- */
-router.get('/history', async (req, res, next) => {
-  try {
-    const resumeId = typeof req.query.resumeId === 'string' ? req.query.resumeId : undefined
-    const filter = typeof req.query.filter === 'string' ? req.query.filter : 'all'
-    const history = await resumeService.getHistory(req.user!.id, resumeId, filter)
-    res.json({ history })
-  } catch (err) {
-    next(err)
-  }
-})
-
-/**
- * @openapi
- * /api/resumes/{resumeId}:
- *   get:
- *     tags: [Resumes]
- *     summary: Get resume by ID
- */
 router.get('/:resumeId', async (req, res, next) => {
   try {
     const resume = await resumeService.getResumeById(req.user!.id, req.params.resumeId)
@@ -85,13 +45,6 @@ router.get('/:resumeId', async (req, res, next) => {
   }
 })
 
-/**
- * @openapi
- * /api/resumes/{resumeId}/stats:
- *   get:
- *     tags: [Resumes]
- *     summary: ATS score stats for a resume
- */
 router.get('/:resumeId/stats', async (req, res, next) => {
   try {
     const stats = await resumeService.getScoreStats(req.user!.id, req.params.resumeId)
@@ -101,13 +54,6 @@ router.get('/:resumeId/stats', async (req, res, next) => {
   }
 })
 
-/**
- * @openapi
- * /api/resumes/{resumeId}/history:
- *   get:
- *     tags: [Resumes]
- *     summary: History for a specific resume
- */
 router.get('/:resumeId/history', async (req, res, next) => {
   try {
     const filter = typeof req.query.filter === 'string' ? req.query.filter : 'all'
@@ -118,13 +64,6 @@ router.get('/:resumeId/history', async (req, res, next) => {
   }
 })
 
-/**
- * @openapi
- * /api/resumes/{resumeId}/versions:
- *   post:
- *     tags: [Resumes]
- *     summary: Upload a new resume version
- */
 router.post('/:resumeId/versions', (req, res, next) => {
   uploadResumeFile(req, res, async (err) => {
     if (err) {
@@ -154,13 +93,6 @@ router.post('/:resumeId/versions', (req, res, next) => {
   })
 })
 
-/**
- * @openapi
- * /api/resumes/{resumeId}/versions/{versionId}:
- *   get:
- *     tags: [Resumes]
- *     summary: Get a resume version
- */
 router.get('/:resumeId/versions/:versionId', async (req, res, next) => {
   try {
     const version = await resumeService.getVersion(
@@ -178,13 +110,6 @@ router.get('/:resumeId/versions/:versionId', async (req, res, next) => {
   }
 })
 
-/**
- * @openapi
- * /api/resumes/{resumeId}/versions/{versionId}/active:
- *   patch:
- *     tags: [Resumes]
- *     summary: Set active version
- */
 router.patch('/:resumeId/versions/:versionId/active', async (req, res, next) => {
   try {
     const resume = await resumeService.setActiveVersion(
@@ -198,19 +123,9 @@ router.patch('/:resumeId/versions/:versionId/active', async (req, res, next) => 
   }
 })
 
-/**
- * @openapi
- * /api/resumes/{resumeId}/versions/{versionId}/score:
- *   patch:
- *     tags: [Resumes]
- *     summary: Update ATS score for a version
- */
 router.patch('/:resumeId/versions/:versionId/score', async (req, res, next) => {
   try {
-    const scoreSchema = z.object({
-      score: z.number().int().min(0).max(100),
-    })
-    const { score } = scoreSchema.parse(req.body)
+    const { score } = z.object({ score: z.number().int().min(0).max(100) }).parse(req.body)
     const version = await resumeService.updateVersionScore(
       req.user!.id,
       req.params.resumeId,
@@ -223,13 +138,6 @@ router.patch('/:resumeId/versions/:versionId/score', async (req, res, next) => {
   }
 })
 
-/**
- * @openapi
- * /api/resumes/{resumeId}/versions/{versionId}:
- *   delete:
- *     tags: [Resumes]
- *     summary: Delete a resume version
- */
 router.delete('/:resumeId/versions/:versionId', async (req, res, next) => {
   try {
     const resume = await resumeService.deleteVersion(

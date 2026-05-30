@@ -1,12 +1,13 @@
 import type { User } from '@prisma/client'
 
-export type SafeUser = Pick<User, 'id' | 'email' | 'name'>
+export type SafeUser = Pick<User, 'id' | 'email' | 'name' | 'role'>
 
 export function toSafeUser(user: User): SafeUser {
   return {
     id: user.id,
     email: user.email,
     name: user.name,
+    role: user.role,
   }
 }
 

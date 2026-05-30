@@ -1,10 +1,12 @@
 import { createApp } from './app.js'
 import { env } from './config/env.js'
 import { prisma } from './lib/prisma.js'
+import { runSecurityChecks } from './utils/securityCheck.js'
 
 const app = createApp()
 
 async function start() {
+  runSecurityChecks()
   await prisma.$connect()
 
   app.listen(env.port, () => {

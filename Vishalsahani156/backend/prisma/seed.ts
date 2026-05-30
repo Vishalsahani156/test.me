@@ -1,4 +1,6 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, UserRole } from '@prisma/client'
+import bcrypt from 'bcryptjs'
+import { env } from '../src/config/env.js'
 import { ABOUT_DATA } from '../src/data/aboutData.js'
 import { BLOG_CATEGORIES } from '../src/data/blogCategories.js'
 import { FAQ_DATA } from '../src/data/faqData.js'
@@ -6,6 +8,27 @@ import { SEED_BLOG_POSTS } from '../src/data/seedBlogPosts.js'
 import { SEED_JOBS } from '../src/data/seedJobs.js'
 
 const prisma = new PrismaClient()
+
+const SALT_ROUNDS = 12
+
+async function seedAdmin() {
+  const passwordHash = await bcrypt.hash(env.admin.password, SALT_ROUNDS)
+  await prisma.user.upsert({
+    where: { email: env.admin.email },
+    update: {
+      name: env.admin.name,
+      passwordHash,
+      role: UserRole.ADMIN,
+    },
+    create: {
+      email: env.admin.email,
+      name: env.admin.name,
+      passwordHash,
+      role: UserRole.ADMIN,
+    },
+  })
+  console.log(`Seeded admin user: ${env.admin.email}`)
+}
 
 async function seedJobs() {
   for (const job of SEED_JOBS) {
@@ -120,6 +143,7 @@ async function seedFaq() {
 }
 
 async function main() {
+  await seedAdmin()
   await seedJobs()
   await seedBlog()
   await seedAbout()

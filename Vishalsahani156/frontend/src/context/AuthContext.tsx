@@ -23,6 +23,7 @@ const MOCK_USER: User = {
   id: 'dev-user',
   email: 'demo@test.com',
   name: 'Demo User',
+  role: 'USER',
 }
 
 const MOCK_TOKEN = 'dev-bypass-token'
@@ -32,6 +33,7 @@ interface AuthContextValue {
   token: string | null
   isLoading: boolean
   isAuthenticated: boolean
+  isAdmin: boolean
   login: (credentials: LoginCredentials) => Promise<void>
   signup: (credentials: SignupCredentials) => Promise<void>
   logout: () => void
@@ -158,6 +160,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       token,
       isLoading,
       isAuthenticated: Boolean(user && token),
+      isAdmin: user?.role === 'ADMIN',
       login,
       signup,
       logout,

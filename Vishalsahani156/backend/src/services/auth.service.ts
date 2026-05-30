@@ -25,7 +25,7 @@ interface LoginInput {
 }
 
 function buildAuthResponse(
-  user: { id: string; email: string; name: string },
+  user: { id: string; email: string; name: string; role: string },
   accessToken: string,
   refreshToken: string,
   includeRefresh = false,
@@ -49,6 +49,7 @@ export const authService = {
         name: input.name.trim(),
         email,
         passwordHash,
+        role: 'USER',
       },
     })
 
