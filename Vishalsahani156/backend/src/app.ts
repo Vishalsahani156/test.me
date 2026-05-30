@@ -7,6 +7,8 @@ import { env } from './config/env.js'
 import { swaggerSpec } from './config/swagger.js'
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js'
 import authRoutes from './routes/auth.routes.js'
+import blogRoutes from './routes/blog.routes.js'
+import contentRoutes from './routes/content.routes.js'
 import dashboardRoutes from './routes/dashboard.routes.js'
 import healthRoutes from './routes/health.routes.js'
 import jobsRoutes from './routes/jobs.routes.js'
@@ -49,6 +51,8 @@ export function createApp() {
   app.use('/api/jobs', jobsRoutes)
   app.use('/api/dashboard', dashboardRoutes)
   app.use('/api/resumes', resumesRoutes)
+  app.use('/api/blog', blogRoutes)
+  app.use('/api/content', contentRoutes)
 
   app.use(notFoundHandler)
   app.use(errorHandler)

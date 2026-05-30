@@ -1,12 +1,25 @@
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { mockAboutData } from '../data/mockAboutData'
+import { aboutApi } from '../services/aboutApi'
 import { FaqSection } from '../components/contact/FaqSection'
 import { ContactForm } from '../components/shared/ContactForm'
+import type { AboutData } from '../types/about'
 
 export function ContactPage() {
   const { isAuthenticated } = useAuth()
-  const { contact } = mockAboutData
+  const [about, setAbout] = useState<AboutData | null>(null)
+
+  useEffect(() => {
+    aboutApi.getAbout().then(setAbout).catch(() => setAbout(null))
+  }, [])
+
+  const contact = about?.contact ?? {
+    email: 'hello@careertoolkit.in',
+    phone: '+91 98765 43210',
+    address: 'Indiranagar, Bangalore, Karnataka 560038, India',
+    hours: 'Mon–Fri, 9:00 AM – 6:00 PM IST',
+  }
 
   return (
     <div className="about-page contact-page">
