@@ -1,10 +1,13 @@
 import type { ReactNode } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { SIGNUP_ENABLED } from '../config/features'
 import { useAuth } from '../context/AuthContext'
 import { ForgotPasswordPage } from '../pages/ForgotPasswordPage'
 import { LoginPage } from '../pages/LoginPage'
 import { ResetPasswordPage } from '../pages/ResetPasswordPage'
 import { ResumeCheckerPage } from '../pages/ResumeCheckerPage'
+import { ResumeManagerDetailPage } from '../pages/ResumeManagerDetailPage'
+import { ResumeManagerPage } from '../pages/ResumeManagerPage'
 import { SignupPage } from '../pages/SignupPage'
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
@@ -37,7 +40,7 @@ function GuestRoute({ children }: { children: ReactNode }) {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />
+    return <Navigate to="/resume-checker" replace />
   }
 
   return children
@@ -46,11 +49,28 @@ function GuestRoute({ children }: { children: ReactNode }) {
 export function AppRoutes() {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/resume-checker" replace />} />
       <Route
-        path="/"
+        path="/resume-checker"
         element={
           <ProtectedRoute>
             <ResumeCheckerPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/resume-manager"
+        element={
+          <ProtectedRoute>
+            <ResumeManagerPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/resume-manager/:resumeId"
+        element={
+          <ProtectedRoute>
+            <ResumeManagerDetailPage />
           </ProtectedRoute>
         }
       />
@@ -65,14 +85,18 @@ export function AppRoutes() {
       <Route
         path="/signup"
         element={
-          <GuestRoute>
-            <SignupPage />
-          </GuestRoute>
+          SIGNUP_ENABLED ? (
+            <GuestRoute>
+              <SignupPage />
+            </GuestRoute>
+          ) : (
+            <Navigate to="/login" replace />
+          )
         }
       />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/resume-checker" replace />} />
     </Routes>
   )
 }
