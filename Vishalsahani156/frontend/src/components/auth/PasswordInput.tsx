@@ -5,7 +5,13 @@ interface PasswordInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>,
   id: string
 }
 
-export function PasswordInput({ label, id, className, ...props }: PasswordInputProps) {
+export function PasswordInput({
+  label,
+  id,
+  className,
+  autoComplete = 'current-password',
+  ...props
+}: PasswordInputProps) {
   const [visible, setVisible] = useState(false)
 
   return (
@@ -15,7 +21,7 @@ export function PasswordInput({ label, id, className, ...props }: PasswordInputP
         <input
           id={id}
           type={visible ? 'text' : 'password'}
-          autoComplete={props.autoComplete ?? 'current-password'}
+          autoComplete={autoComplete}
           className={className}
           {...props}
         />
