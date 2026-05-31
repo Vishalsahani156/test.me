@@ -28,6 +28,12 @@ echo "Starting PostgreSQL..."
 cd "$BACKEND"
 docker compose up -d
 
+echo "Preparing database..."
+cd "$BACKEND"
+npx prisma generate
+npx prisma db push
+npm run db:seed
+
 echo "Starting backend (http://localhost:3000)..."
 cd "$BACKEND"
 npm run dev &
