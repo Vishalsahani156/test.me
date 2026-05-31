@@ -27,4 +27,8 @@ export const env = {
     password: process.env.ADMIN_PASSWORD ?? 'Admin@12345',
     name: process.env.ADMIN_NAME ?? 'Platform Admin',
   },
+  gemini: {
+    apiKey: process.env.GEMINI_API_KEY?.trim() ?? '',
+    model: process.env.GEMINI_MODEL?.trim() || 'gemini-2.0-flash',
+  },
 }

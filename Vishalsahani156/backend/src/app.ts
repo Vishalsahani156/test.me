@@ -13,6 +13,7 @@ import contentRoutes from './routes/content.routes.js'
 import dashboardRoutes from './routes/dashboard.routes.js'
 import healthRoutes from './routes/health.routes.js'
 import jobsRoutes from './routes/jobs.routes.js'
+import atsRoutes from './routes/ats.routes.js'
 import resumesRoutes from './routes/resumes.routes.js'
 
 export function createApp() {
@@ -48,6 +49,12 @@ export function createApp() {
     message: { message: 'Too many admin requests, please try again later.' },
   })
 
+  const atsLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    message: { message: 'Too many ATS analysis requests, please try again later.' },
+  })
+
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
   app.get('/api/docs.json', (_req, res) => {
     res.json(swaggerSpec)
@@ -68,6 +75,7 @@ export function createApp() {
       jobs: '/api/jobs',
       dashboard: '/api/dashboard',
       resumes: '/api/resumes',
+      ats: '/api/ats',
       blog: '/api/blog',
       content: '/api/content',
       admin: '/api/admin',
@@ -81,6 +89,7 @@ export function createApp() {
   app.use('/api/jobs', jobsRoutes)
   app.use('/api/dashboard', dashboardRoutes)
   app.use('/api/resumes', resumesRoutes)
+  app.use('/api/ats', atsLimiter, atsRoutes)
   app.use('/api/blog', blogRoutes)
   app.use('/api/content', contentRoutes)
   app.use('/api/admin', adminLimiter, adminRoutes)
